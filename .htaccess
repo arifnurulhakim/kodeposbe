@@ -1,0 +1,6 @@
+
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^sistemkodeposkominfo\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.sistemkodeposkominfo\.com$
+RewriteRule ^/?$ "https\:\/\/sistemkodeposkominfo\.com\/public" [R=301,L]
+
