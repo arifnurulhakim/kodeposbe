@@ -162,6 +162,8 @@ Route::controller(PengirimanController::class)->group(function () {
     Route::get('/pengiriman/{id}', 'show');
     Route::put('/pengiriman/{id}', 'update');
     Route::delete('/pengiriman/{id}', 'destroy');
+    Route::get('/pengiriman/qrcode/{id}', 'generateQrCode');
+
 
 });
 
