@@ -91,12 +91,12 @@ public function generateQrCode($id)
         $base64 =base64_encode($qrCode);
         $database64 = $base64;
         $qrCodeData = [
+            'qrCode' => $database64,
             'pengirimanData' => $pengiriman,
         ];
 
         return response()->json([
             'status' => 'success',
-            'qrCode' => $database64,
             'data' => $qrCodeData,
         ], 200);
     } catch (\Exception $e) {
