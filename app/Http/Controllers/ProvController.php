@@ -73,7 +73,7 @@ class ProvController extends Controller
     public function destroy($id)
     {
         try {
-            $provisi = Provinsi::findOrFailOrFail($id);
+            $provisi = Provinsi::findOrFail($id);
             $provisi->delete();
             return response()->json([
                 'status' => 'success',
