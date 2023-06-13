@@ -91,7 +91,7 @@ public function generateQrCode($id)
         $base64 = 'data:image/png;base64,' . base64_encode($qrCode);
         
         $qrCodeData = [
-            'qrCode' => $base64,
+            'qrCode' => [$base64],
             'pengirimanData' => $pengiriman,
         ];
 
