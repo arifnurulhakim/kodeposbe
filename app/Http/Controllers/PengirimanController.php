@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pengiriman;
 
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
 class PengirimanController extends Controller
 {
     public function index()
@@ -73,4 +75,34 @@ class PengirimanController extends Controller
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
+
+
+    
+public function generateQrCode($id)
+{
+    try {
+        $pengiriman = Pengiriman::findOrFail($id);
+        
+        // Generate QR code from URL
+        $url = 'https://sistemkodeposkominfo.com/index.html#/Dashboard';
+        $qrCode = QrCode::size(300)->generate($url);
+        
+        // Convert QR code image to base64
+        $base64 = 'data:image/png;base64,' . base64_encode($qrCode);
+        
+        $qrCodeData = [
+            'qrCode' => $base64,
+            'pengirimanData' => $pengiriman,
+        ];
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $qrCodeData,
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+    }
+}
+    
+    
 }
