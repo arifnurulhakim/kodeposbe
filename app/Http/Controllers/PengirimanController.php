@@ -85,7 +85,7 @@ public function generateQrCode($id)
         
         // Generate QR code from URL
         $url = 'https://sistemkodeposkominfo.com/index.html#/Dashboard';
-        $qrCode = QrCode::size(300)->generate($url);
+        $qrCode = QrCode::format('png')->size(300)->generate($url);
         
         // Convert QR code image to base64
         $base64 =base64_encode($qrCode);
