@@ -88,7 +88,7 @@ public function generateQrCode($id)
         $qrCode = QrCode::size(300)->generate($url);
         
         // Convert QR code image to base64
-        $base64 = 'data:image/png;base64,' . base64_encode($qrCode);
+        $base64 = 'data:image/svg;base64,' . base64_encode($qrCode);
         $img = [
             'base64'=>$base64
         ];
