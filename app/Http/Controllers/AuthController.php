@@ -7,6 +7,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\UserLog;
 
 class AuthController extends Controller
 {
@@ -17,7 +18,7 @@ class AuthController extends Controller
                 'email' => 'required|email',
                 'password' => 'required',
             ]);
-    
+        
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
@@ -25,7 +26,7 @@ class AuthController extends Controller
                     'error_code' => 'INPUT_VALIDATION_ERROR'
                 ], 422);
             }
-    
+        
             $credentials = $request->only('email', 'password');
             if (! $token = JWTAuth::attempt($credentials)) {
                 return response()->json([
@@ -35,7 +36,15 @@ class AuthController extends Controller
                 ], 404);
             }
             $user = Auth::user();
-            $expiration_time = auth()->factory()->getTTL();
+        
+            // Create user log
+            if($user){
+                $userLog = new UserLog();
+                $userLog->user_id = $user->id;
+                $userLog->aktivitas = 'login';
+                $userLog->modul = 'auth';
+                $userLog->save();
+                }
             return response()->json([
                 'status' => 'success',
                 'data' => [
@@ -43,14 +52,12 @@ class AuthController extends Controller
                     'user' => $user->name,
                     'email' => $user->email,
                     'token' => $token,
-                    'exp' => $expiration_time,
                 ],
             ], 200);
-            
-
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+        
     }
 
     public function register(Request $request)
@@ -75,7 +82,20 @@ class AuthController extends Controller
                 'email' => $request->get('email'),
                 'password' => bcrypt($request->get('password')),
             ]);
-
+            $userlogin = Auth::user();
+            if($userlogin){
+                $userLog = new UserLog();
+                $userLog->user_id = $userlogin->id;
+                $userLog->aktivitas = 'membuatkan akun';
+                $userLog->modul = 'auth';
+                $userLog->save();
+                }else{
+                    $userLog = new UserLog();
+                    $userLog->user_id = $user->id;
+                    $userLog->aktivitas = 'register';
+                    $userLog->modul = 'auth';
+                    $userLog->save();
+                }
             $token = JWTAuth::fromUser($user);
 
             return response()->json(compact('user','token'),201);
@@ -105,6 +125,13 @@ class AuthController extends Controller
             }
     
             Auth::logout();
+            if(Auth::logout()){
+                $userLog = new UserLog();
+                $userLog->user_id = $user->id;
+                $userLog->aktivitas = 'logout';
+                $userLog->modul = 'auth';
+                $userLog->save();
+                }
             return response()->json([
                 'status' => 'success',
                 'message' => 'Successfully logged out',
@@ -226,6 +253,21 @@ class AuthController extends Controller
             $user->password = $request->password ? bcrypt($request->password) : $user->password;
             $user->save();
 
+            $userlogin = Auth::user();
+            if($userlogin){
+                $userLog = new UserLog();
+                $userLog->user_id = $userlogin->id;
+                $userLog->aktivitas = 'mengubah akun';
+                $userLog->modul = 'auth';
+                $userLog->save();
+                }else{
+                    $userLog = new UserLog();
+                    $userLog->user_id = $user->id;
+                    $userLog->aktivitas = 'mengubah akun';
+                    $userLog->modul = 'auth';
+                    $userLog->save();
+                }
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'User updated successfully',
@@ -246,7 +288,22 @@ class AuthController extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'User with name ' . $user->name .' and with email '.$user->email . ' has been deleted.'
-                ]);
+                ]);            
+                $userlogin = Auth::user();
+                if($userlogin){
+                    $userLog = new UserLog();
+                    $userLog->user_id = $userlogin->id;
+                    $userLog->aktivitas = 'mengubah akun';
+                    $userLog->modul = 'auth';
+                    $userLog->save();
+                    }else{
+                        $userLog = new UserLog();
+                        $userLog->user_id = $user->id;
+                        $userLog->aktivitas = 'mengubah akun';
+                        $userLog->modul = 'auth';
+                        $userLog->save();
+                    }
+                
             } else {
                 return response()->json([
                     'status' => 'error',
