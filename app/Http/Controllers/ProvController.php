@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Provinsi;
+use App\Models\UserLog; // Tambahkan ini untuk mengakses model UserLog
+use Illuminate\Support\Facades\Auth; // Tambahkan ini untuk mengakses data user yang sedang login
 
 class ProvController extends Controller
 {
@@ -24,6 +26,10 @@ class ProvController extends Controller
     {
         try {
             $provisi = Provinsi::create($request->all());
+            
+            // Tambahkan logging aktivitas
+            $this->logActivity('membuat provinsi');
+            
             return response()->json([
                 'status' => 'success',
                 'data' => $provisi,
@@ -61,6 +67,10 @@ class ProvController extends Controller
             $provisi->nama_provinsi = $request->nama_provinsi;
 
             $provisi->save();
+            
+            // Tambahkan logging aktivitas
+            $this->logActivity('memperbarui provinsi');
+            
             return response()->json([
                 'status' => 'success',
                 'data' => $provisi,
@@ -75,12 +85,29 @@ class ProvController extends Controller
         try {
             $provisi = Provinsi::findOrFail($id);
             $provisi->delete();
+            
+            // Tambahkan logging aktivitas
+            $this->logActivity('menghapus provinsi');
+            
             return response()->json([
                 'status' => 'success',
                 'data' => $provisi,
             ], 204);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+    
+    // Fungsi untuk mencatat aktivitas
+    private function logActivity($aktivitas)
+    {
+        $userLogin = Auth::user();
+        if ($userLogin) {
+            $userLog = new UserLog();
+            $userLog->user_id = $userLogin->id;
+            $userLog->aktivitas = $aktivitas;
+            $userLog->modul = 'Provinsi';
+            $userLog->save();
         }
     }
 }
