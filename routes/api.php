@@ -167,4 +167,14 @@ Route::controller(PengirimanController::class)->group(function () {
 
 });
 
+// pengiriman
+Route::controller(UserLogController::class)->group(function () {
+
+    Route::get('/userlog', 'index');
+    // Route::post('/userlog', 'store');
+    Route::get('/userlog/{id}', 'show');
+    // Route::put('/userlog/{id}', 'update');
+    // Route::delete('/userlog/{id}', 'destroy');
+});
+
 
