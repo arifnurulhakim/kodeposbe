@@ -28,15 +28,7 @@ class ProvController extends Controller
             $provisi = Provinsi::create($request->all());
             
             // Tambahkan logging aktivitas
-
-            $userLogin = Auth::user();
-            if ($userLogin) {
-                $userLog = new UserLog();
-                $userLog->user_id = $userLogin->id;
-                $userLog->aktivitas ='membuat provinsi';
-                $userLog->modul = 'Provinsi';
-                $userLog->save();
-            }
+            $this->logActivity('membuat provinsi');
             
             return response()->json([
                 'status' => 'success',
@@ -79,14 +71,6 @@ class ProvController extends Controller
             // Tambahkan logging aktivitas
             $this->logActivity('memperbarui provinsi');
             
-            $userLogin = Auth::user();
-            if ($userLogin) {
-                $userLog = new UserLog();
-                $userLog->user_id = $userLogin->id;
-                $userLog->aktivitas ='memperbarui provinsi';
-                $userLog->modul = 'Provinsi';
-                $userLog->save();
-            }
             return response()->json([
                 'status' => 'success',
                 'data' => $provisi,
@@ -104,15 +88,6 @@ class ProvController extends Controller
             
             // Tambahkan logging aktivitas
             $this->logActivity('menghapus provinsi');
-
-            $userLogin = Auth::user();
-            if ($userLogin) {
-                $userLog = new UserLog();
-                $userLog->user_id = $userLogin->id;
-                $userLog->aktivitas ='menghapus provinsi';
-                $userLog->modul = 'Provinsi';
-                $userLog->save();
-            }
             
             return response()->json([
                 'status' => 'success',
@@ -131,7 +106,7 @@ class ProvController extends Controller
             $userLog = new UserLog();
             $userLog->user_id = $userLogin->id;
             $userLog->aktivitas = $aktivitas;
-            $userLog->modul = 'Provinsi';
+            $userLog->modul = 'ProvController';
             $userLog->save();
         }
     }
