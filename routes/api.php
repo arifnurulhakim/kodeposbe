@@ -71,59 +71,59 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/exportCSV', 'exportCSV');
     });
 
-    Route::controller(KodePosController::class)->group(function () {
-        Route::get('/kode-pos', 'index');
-        Route::post('/kode-pos', 'store');
-        Route::get('/kode-pos/{id}', 'show');
-        Route::put('/kode-pos/{id}', 'update');
-        Route::delete('/kode-pos/{id}', 'destroy');
-    });
+    // Route::controller(KodePosController::class)->group(function () {
+    //     Route::get('/kode-pos', 'index');
+    //     Route::post('/kode-pos', 'store');
+    //     Route::get('/kode-pos/{id}', 'show');
+    //     Route::put('/kode-pos/{id}', 'update');
+    //     Route::delete('/kode-pos/{id}', 'destroy');
+    // });
 
-    Route::controller(PengirimanController::class)->group(function () {
-        Route::get('/pengiriman', 'index');
-        Route::post('/pengiriman', 'store');
-        Route::get('/pengiriman/{id}', 'show');
-        Route::put('/pengiriman/{id}', 'update');
-        Route::delete('/pengiriman/{id}', 'destroy');
-        Route::get('/pengiriman/qrcode/{id}', 'generateQrCode');
-    });
+    // Route::controller(PengirimanController::class)->group(function () {
+    //     Route::get('/pengiriman', 'index');
+    //     Route::post('/pengiriman', 'store');
+    //     Route::get('/pengiriman/{id}', 'show');
+    //     Route::put('/pengiriman/{id}', 'update');
+    //     Route::delete('/pengiriman/{id}', 'destroy');
+    //     Route::get('/pengiriman/qrcode/{id}', 'generateQrCode');
+    // });
 
-    Route::controller(UserLogController::class)->group(function () {
-        Route::get('/userlog', 'index');
-        Route::get('/userlog/{id}', 'show');
-    });
+    // Route::controller(UserLogController::class)->group(function () {
+    //     Route::get('/userlog', 'index');
+    //     Route::get('/userlog/{id}', 'show');
+    // });
 
-    Route::controller(ProvController::class)->group(function () {
-        Route::get('/provinsi', 'index');
-        Route::post('/provinsi', 'store');
-        Route::get('/provinsi/{id}', 'show');
-        Route::put('/provinsi/{id}', 'update');
-        Route::delete('/provinsi/{id}', 'destroy');
-    });
+    // Route::controller(ProvController::class)->group(function () {
+    //     Route::get('/provinsi', 'index');
+    //     Route::post('/provinsi', 'store');
+    //     Route::get('/provinsi/{id}', 'show');
+    //     Route::put('/provinsi/{id}', 'update');
+    //     Route::delete('/provinsi/{id}', 'destroy');
+    // });
     
-    Route::controller(KabController::class)->group(function () {
-        Route::get('/kabupaten', 'index');
-        Route::post('/kabupaten', 'store');
-        Route::get('/kabupaten/{id}', 'show');
-        Route::put('/kabupaten/{id}', 'update');
-        Route::delete('/kabupaten/{id}', 'destroy');
-    });
+    // Route::controller(KabController::class)->group(function () {
+    //     Route::get('/kabupaten', 'index');
+    //     Route::post('/kabupaten', 'store');
+    //     Route::get('/kabupaten/{id}', 'show');
+    //     Route::put('/kabupaten/{id}', 'update');
+    //     Route::delete('/kabupaten/{id}', 'destroy');
+    // });
     
-    Route::controller(KecController::class)->group(function () {
-        Route::get('/kecamatan', 'index');
-        Route::post('/kecamatan', 'store');
-        Route::get('/kecamatan/{id}', 'show');
-        Route::put('/kecamatan/{id}', 'update');
-        Route::delete('/kecamatan/{id}', 'destroy');
-    });
+    // Route::controller(KecController::class)->group(function () {
+    //     Route::get('/kecamatan', 'index');
+    //     Route::post('/kecamatan', 'store');
+    //     Route::get('/kecamatan/{id}', 'show');
+    //     Route::put('/kecamatan/{id}', 'update');
+    //     Route::delete('/kecamatan/{id}', 'destroy');
+    // });
     
-    Route::controller(DesaController::class)->group(function () {
-        Route::get('/desa', 'index');
-        Route::post('/desa', 'store');
-        Route::get('/desa/{id}', 'show');
-        Route::put('/desa/{id}', 'update');
-        Route::delete('/desa/{id}', 'destroy');
-    });
+    // Route::controller(DesaController::class)->group(function () {
+    //     Route::get('/desa', 'index');
+    //     Route::post('/desa', 'store');
+    //     Route::get('/desa/{id}', 'show');
+    //     Route::put('/desa/{id}', 'update');
+    //     Route::delete('/desa/{id}', 'destroy');
+    // });
 });
 
 Route::controller(ForgotPasswordController::class)->group(function () {
@@ -145,4 +145,57 @@ Route::post('/reset-first-password', [ResetPasswordController::class, 'resetFirs
 
 
 
+Route::controller(KodePosController::class)->group(function () {
+    Route::get('/kode-pos', 'index');
+    Route::post('/kode-pos', 'store');
+    Route::get('/kode-pos/{id}', 'show');
+    Route::put('/kode-pos/{id}', 'update');
+    Route::delete('/kode-pos/{id}', 'destroy');
+});
+
+Route::controller(PengirimanController::class)->group(function () {
+    Route::get('/pengiriman', 'index');
+    Route::post('/pengiriman', 'store');
+    Route::get('/pengiriman/{id}', 'show');
+    Route::put('/pengiriman/{id}', 'update');
+    Route::delete('/pengiriman/{id}', 'destroy');
+    Route::get('/pengiriman/qrcode/{id}', 'generateQrCode');
+});
+
+Route::controller(UserLogController::class)->group(function () {
+    Route::get('/userlog', 'index');
+    Route::get('/userlog/{id}', 'show');
+});
+
+Route::controller(ProvController::class)->group(function () {
+    Route::get('/provinsi', 'index');
+    Route::post('/provinsi', 'store');
+    Route::get('/provinsi/{id}', 'show');
+    Route::put('/provinsi/{id}', 'update');
+    Route::delete('/provinsi/{id}', 'destroy');
+});
+
+Route::controller(KabController::class)->group(function () {
+    Route::get('/kabupaten', 'index');
+    Route::post('/kabupaten', 'store');
+    Route::get('/kabupaten/{id}', 'show');
+    Route::put('/kabupaten/{id}', 'update');
+    Route::delete('/kabupaten/{id}', 'destroy');
+});
+
+Route::controller(KecController::class)->group(function () {
+    Route::get('/kecamatan', 'index');
+    Route::post('/kecamatan', 'store');
+    Route::get('/kecamatan/{id}', 'show');
+    Route::put('/kecamatan/{id}', 'update');
+    Route::delete('/kecamatan/{id}', 'destroy');
+});
+
+Route::controller(DesaController::class)->group(function () {
+    Route::get('/desa', 'index');
+    Route::post('/desa', 'store');
+    Route::get('/desa/{id}', 'show');
+    Route::put('/desa/{id}', 'update');
+    Route::delete('/desa/{id}', 'destroy');
+});
 
