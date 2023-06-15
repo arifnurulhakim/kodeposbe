@@ -29,7 +29,7 @@ class ProvController extends Controller
             
             // Tambahkan logging aktivitas
             $this->logActivity('membuat provinsi');
-            
+            logActivity($aktivitas);
             return response()->json([
                 'status' => 'success',
                 'data' => $provisi,
@@ -70,7 +70,7 @@ class ProvController extends Controller
             
             // Tambahkan logging aktivitas
             $this->logActivity('memperbarui provinsi');
-            
+            logActivity($aktivitas);
             return response()->json([
                 'status' => 'success',
                 'data' => $provisi,
@@ -88,7 +88,7 @@ class ProvController extends Controller
             
             // Tambahkan logging aktivitas
             $this->logActivity('menghapus provinsi');
-            
+            logActivity($aktivitas);
             return response()->json([
                 'status' => 'success',
                 'data' => $provisi,
@@ -108,6 +108,7 @@ class ProvController extends Controller
             $userLog->aktivitas = $aktivitas;
             $userLog->modul = 'Provinsi';
             $userLog->save();
+            
         }
     }
 }
