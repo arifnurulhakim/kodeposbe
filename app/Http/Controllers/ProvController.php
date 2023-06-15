@@ -28,8 +28,16 @@ class ProvController extends Controller
             $provisi = Provinsi::create($request->all());
             
             // Tambahkan logging aktivitas
-            $this->logActivity('membuat provinsi');
-            logActivity($aktivitas);
+
+            $userLogin = Auth::user();
+            if ($userLogin) {
+                $userLog = new UserLog();
+                $userLog->user_id = $userLogin->id;
+                $userLog->aktivitas ='membuat provinsi';
+                $userLog->modul = 'Provinsi';
+                $userLog->save();
+            }
+            
             return response()->json([
                 'status' => 'success',
                 'data' => $provisi,
@@ -70,7 +78,15 @@ class ProvController extends Controller
             
             // Tambahkan logging aktivitas
             $this->logActivity('memperbarui provinsi');
-            logActivity($aktivitas);
+            
+            $userLogin = Auth::user();
+            if ($userLogin) {
+                $userLog = new UserLog();
+                $userLog->user_id = $userLogin->id;
+                $userLog->aktivitas ='memperbarui provinsi';
+                $userLog->modul = 'Provinsi';
+                $userLog->save();
+            }
             return response()->json([
                 'status' => 'success',
                 'data' => $provisi,
@@ -88,7 +104,16 @@ class ProvController extends Controller
             
             // Tambahkan logging aktivitas
             $this->logActivity('menghapus provinsi');
-            logActivity($aktivitas);
+
+            $userLogin = Auth::user();
+            if ($userLogin) {
+                $userLog = new UserLog();
+                $userLog->user_id = $userLogin->id;
+                $userLog->aktivitas ='menghapus provinsi';
+                $userLog->modul = 'Provinsi';
+                $userLog->save();
+            }
+            
             return response()->json([
                 'status' => 'success',
                 'data' => $provisi,
@@ -108,7 +133,6 @@ class ProvController extends Controller
             $userLog->aktivitas = $aktivitas;
             $userLog->modul = 'Provinsi';
             $userLog->save();
-            
         }
     }
 }
