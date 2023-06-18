@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\KodePos;
 use App\Models\UserLog; // Tambahkan ini untuk mengakses model UserLog
 use Illuminate\Support\Facades\Auth;// Tambahkan ini untuk mengakses data user yang sedang login
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class KodePosController extends Controller
 {
