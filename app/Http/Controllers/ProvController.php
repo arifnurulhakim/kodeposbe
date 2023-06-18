@@ -25,12 +25,17 @@ class ProvController extends Controller
     
             return response()->json([
                 'status' => 'success',
+                'total_pages' => $provisi->lastPage(), // Menambahkan total page
+                'current_page' => $provisi->currentPage(), // Menambahkan current page
+                'per_page' => $provisi->perPage(), // Menambahkan per_page
                 'data' => $provisiData,
+                
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    
     
     
     public function store(Request $request)
