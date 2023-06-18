@@ -19,14 +19,19 @@ class ProvController extends Controller
             $currentPage = $request->currentPage ?: self::CURRENT_PAGE;
             $provisi = Provinsi::paginate($perPage, ['*'], 'page', $currentPage);
             $provisi->appends(['perPage' => $perPage, 'currentPage' => $currentPage]); // Menambahkan query parameter ke URL pagination
+    
+            // Menghilangkan informasi paginasi dari objek $provisi
+            $provisiData = $provisi->items();
+    
             return response()->json([
                 'status' => 'success',
-                'data' => $provisi,
+                'data' => $provisiData,
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    
     
     public function store(Request $request)
     {
