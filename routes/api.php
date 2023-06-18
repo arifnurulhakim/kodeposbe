@@ -151,7 +151,7 @@ Route::controller(KodePosController::class)->group(function () {
     Route::get('/kode-pos/{id}', 'show');
     Route::put('/kode-pos/{id}', 'update');
     Route::delete('/kode-pos/{id}', 'destroy');
-    Route::delete('/kode-pos/qrcode/{id}', 'generateQrCode');
+    Route::get('/kode-pos/qrcode/{id}', 'generateQrCode');
 });
 
 Route::controller(PengirimanController::class)->group(function () {
