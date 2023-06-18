@@ -9,18 +9,16 @@ use Illuminate\Support\Facades\Auth; // Tambahkan ini untuk mengakses data user 
 
 class ProvController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        try {
-            $provinsis = Provinsi::paginate(10);
-            return response()->json([
-                'status' => 'success',
-                'data' => $provinsis,
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        $perPage = $request->input('per_page', 10); // Jumlah item per halaman
+        $provisi = Provinsi::paginate($perPage);
+        return response()->json([
+            'status' => 'success',
+            'data' => $provisi,
+        ], 200);
     }
+    
 
     public function store(Request $request)
     {
