@@ -12,10 +12,10 @@ class ProvController extends Controller
     public function index()
     {
         try {
-            $provisi = Provinsi::all();
+            $provinsis = Provinsi::paginate(10);
             return response()->json([
                 'status' => 'success',
-                'data' => $provisi,
+                'data' => $provinsis,
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
