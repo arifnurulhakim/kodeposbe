@@ -12,7 +12,7 @@ class ProvController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10); // Jumlah item per halaman
-        $provisi = Provinsi::paginate($perPage);
+        $provisi = Provinsi::paginate($perPage)->toArray();
         return response()->json([
             'status' => 'success',
             'data' => $provisi,
