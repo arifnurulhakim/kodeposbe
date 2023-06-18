@@ -9,33 +9,19 @@ use Illuminate\Support\Facades\Auth; // Tambahkan ini untuk mengakses data user 
 
 class ProvController extends Controller
 {
-    const PER_PAGE = 10;
-    const CURRENT_PAGE = 1;
-    
-    public function index(Request $request)
+    public function index()
     {
         try {
-            $perPage = $request->perPage ?: self::PER_PAGE;
-            $currentPage = $request->currentPage ?: self::CURRENT_PAGE;
-            $provisi = Provinsi::paginate($perPage, ['*'], 'page', $currentPage);
-            $provisi->appends(['perPage' => $perPage, 'currentPage' => $currentPage]);
-    
-            $provisiData = $provisi->items();
-    
+            $provisi = Provinsi::all();
             return response()->json([
                 'status' => 'success',
-                'total_pages' => $provisi->lastPage(),
-                'current_page' => $provisi->currentPage(),
-                'per_page' => $provisi->perPage(),
-                'total_data' => $provisi->total(), // Menambahkan total data
-                'data' => $provisiData,
+                'data' => $provisi,
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    
-    
+
     public function store(Request $request)
     {
         try {
