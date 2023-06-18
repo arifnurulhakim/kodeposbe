@@ -14,6 +14,6 @@ class Authenticate extends Middleware
     protected function redirectTo(Request $request): ?string
     {
         // Redirect to the desired URL
-        return 'https://sistemkodeposkominfo.com/';
+        return 'https://sistemkodeposkominfo.com/public';
     }
 }
