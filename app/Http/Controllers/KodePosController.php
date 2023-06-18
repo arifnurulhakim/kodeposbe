@@ -16,7 +16,7 @@ class KodePosController extends Controller
             $totalItems = KodePos::count(); // Menghitung jumlah total data kode pos
     
             $kodepos = KodePos::select('kode_pos.*', 'desas.nama_desa', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
-                ->leftJoin('desas', 'kode_pos.kode_desa', '=', 'desas.kode_desa')
+                ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_desa')
                 ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
                 ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
                 ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
