@@ -110,4 +110,33 @@ class KodePosController extends Controller
             $userLog->save();
         }
     }
+
+    public function generateQrCode($id)
+{
+    try {
+        $kodepos = KodePos::findOrFail($id);
+        
+        // Generate QR code from URL
+        $url = 'https://sistemkodeposkominfo.com/index.html#/Dashboard';
+        $qrCode = QrCode::format('png')->size(300)->generate($url);
+        
+        // Convert QR code image to base64
+        $base64 =base64_encode($qrCode);
+        $img = [
+            'base64'=>$base64
+        ];
+        
+        $qrCodeData = [
+            'qrCode' => $img ,
+            'kodeposData' => $kodepos,
+        ];
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $qrCodeData,
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+    }
+}
 }
