@@ -10,21 +10,21 @@ class DesaController extends Controller
     public function index()
     {
         try {
-            $desa = Desa::
-                select('desas.*', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
-                ->leftjoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
-                ->leftjoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
-                ->leftjoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
+            $desa = Desa::select('desas.*', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
+                ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
+                ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
+                ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
                 ->paginate(10); // Menampilkan 10 data per halaman
     
             return response()->json([
                 'status' => 'success',
-                'data' => $desa,
+                'data' => $desa->items(),
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
+    
     
 
     public function store(Request $request)
