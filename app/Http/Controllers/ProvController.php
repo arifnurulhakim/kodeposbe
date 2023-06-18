@@ -18,24 +18,22 @@ class ProvController extends Controller
             $perPage = $request->perPage ?: self::PER_PAGE;
             $currentPage = $request->currentPage ?: self::CURRENT_PAGE;
             $provisi = Provinsi::paginate($perPage, ['*'], 'page', $currentPage);
-            $provisi->appends(['perPage' => $perPage, 'currentPage' => $currentPage]); // Menambahkan query parameter ke URL pagination
+            $provisi->appends(['perPage' => $perPage, 'currentPage' => $currentPage]);
     
-            // Menghilangkan informasi paginasi dari objek $provisi
             $provisiData = $provisi->items();
     
             return response()->json([
                 'status' => 'success',
-                'total_pages' => $provisi->lastPage(), // Menambahkan total page
-                'current_page' => $provisi->currentPage(), // Menambahkan current page
-                'per_page' => $provisi->perPage(), // Menambahkan per_page
+                'total_pages' => $provisi->lastPage(),
+                'current_page' => $provisi->currentPage(),
+                'per_page' => $provisi->perPage(),
+                'total_data' => $provisi->total(), // Menambahkan total data
                 'data' => $provisiData,
-                
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    
     
     
     public function store(Request $request)
