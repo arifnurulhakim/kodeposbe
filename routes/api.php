@@ -77,6 +77,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/kode-pos/{id}', 'show');
         Route::put('/kode-pos/{id}', 'update');
         Route::delete('/kode-pos/{id}', 'destroy');
+        Route::get('/kode-pos/qrcode/{id}', 'generateQrCode');
     });
 
     Route::controller(PengirimanController::class)->group(function () {
