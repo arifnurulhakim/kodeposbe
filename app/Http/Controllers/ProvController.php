@@ -12,7 +12,7 @@ class ProvController extends Controller
     public function index()
     {
         try {
-            $provisi = Provinsi::all();
+            $provisi = Provinsi::paginate(10); // Mengatur jumlah item per halaman menjadi 10, sesuaikan dengan kebutuhan Anda
             return response()->json([
                 'status' => 'success',
                 'data' => $provisi,
@@ -21,6 +21,7 @@ class ProvController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    
 
     public function store(Request $request)
     {
