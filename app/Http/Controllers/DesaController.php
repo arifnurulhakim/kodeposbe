@@ -7,14 +7,17 @@ use App\Models\Desa;
 
 class DesaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
+            $perPage = $request->input('perPage', 10); // Mengambil nilai 'perPage' dari permintaan parameter, defaultnya 10
+            $currentPage = $request->input('currentPage', 1); // Mengambil nilai 'currentPage' dari permintaan parameter, defaultnya 1
+    
             $desa = Desa::select('desas.*', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
                 ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
                 ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
                 ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
-                ->paginate(10); // Menampilkan 10 data per halaman
+                ->paginate($perPage, ['*'], 'page', $currentPage); // Menampilkan data dengan jumlah per halaman dan halaman saat ini
     
             return response()->json([
                 'status' => 'success',
@@ -24,6 +27,7 @@ class DesaController extends Controller
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
+    
     
     
 
