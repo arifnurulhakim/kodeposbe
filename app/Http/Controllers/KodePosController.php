@@ -43,7 +43,7 @@ class KodePosController extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'data' => $kodepos->items(), // Mengambil hanya item-datanya saja
+                    'data' => $kodepos, // Mengambil hanya item-datanya saja
                 ], 200);
             } catch (\Exception $e) {
                 return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
