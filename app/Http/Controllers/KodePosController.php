@@ -106,7 +106,7 @@ class KodePosController extends Controller
             ->where('kabupatens.nama_kabupaten',$kabupaten)
             ->where('kecamatans.nama_kecamatan',$kecamatan)
             ->where('desas.nama_desa',$desa)
-            ->get(); // Mengatur jumlah item per halaman menjadi jumlah total data
+            ->first(); // Mengatur jumlah item per halaman menjadi jumlah total data
 
                 return response()->json([
                     'status' => 'success',
