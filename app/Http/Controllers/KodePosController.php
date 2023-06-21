@@ -30,6 +30,25 @@ class KodePosController extends Controller
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
+
+    public function getbyprovinsi($provinsi){
+        try{
+            $kodepos = KodePos::select('kode_pos.*', 'desas.nama_desa', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
+            ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_desa')
+            ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
+            ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
+            ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
+            ->where('provinsis.nama_provinsi',$provinsi)
+            ->get(); // Mengatur jumlah item per halaman menjadi jumlah total data
+
+                return response()->json([
+                    'status' => 'success',
+                    'data' => $kodepos->items(), // Mengambil hanya item-datanya saja
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
     
     public function store(Request $request)
     {
