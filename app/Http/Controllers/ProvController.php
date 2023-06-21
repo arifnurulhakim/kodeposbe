@@ -21,6 +21,18 @@ class ProvController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    public function getallprovinsi()
+    {
+        try {
+            $provisi = Provinsi::all();
+            return response()->json([
+                'status' => 'success',
+                'data' => $provisi,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
     public function store(Request $request)
     {
