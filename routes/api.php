@@ -60,6 +60,17 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
+Route::controller(ProvController::class)->group(function () {
+    Route::get('/allprovinsi', 'getallprovinsi');
+});
+Route::controller(KodePosController::class)->group(function () {
+    Route::get('/kode-pos/kodepos/{kodepos}', 'getbykodepos');
+    Route::get('/kode-pos/provinsi/{provinsi}', 'getbyprovinsi');
+    Route::get('/kode-pos/{provinsi}/{kabupaten}', 'getbykabupaten');
+    Route::get('/kode-pos/{provinsi}/{kabupaten}/{kecamatan}', 'getbykecamatan');
+    Route::get('/kode-pos/{provinsi}/{kabupaten}/{kecamatan}/{desa}', 'getbydesa');
+});
+
 Route::middleware('auth:api')->group(function () {
     Route::controller(AuthController::class)->group(function () {
         Route::get('/getProfile', 'getProfile');
@@ -142,16 +153,7 @@ Route::controller(ResetPasswordController::class)->group(function () {
     Route::get('/password/reset', '__invoke')->name('postreset');
     Route::post('/password/reset', '__invoke')->name('reset');
 });
-Route::controller(ProvController::class)->group(function () {
-    Route::get('/allprovinsi', 'getallprovinsi');
-});
-Route::controller(KodePosController::class)->group(function () {
-    Route::get('/kode-pos/kodepos/{kodepos}', 'getbykodepos');
-    Route::get('/kode-pos/provinsi/{provinsi}', 'getbyprovinsi');
-    Route::get('/kode-pos/{provinsi}/{kabupaten}', 'getbykabupaten');
-    Route::get('/kode-pos/{provinsi}/{kabupaten}/{kecamatan}', 'getbykecamatan');
-    Route::get('/kode-pos/{provinsi}/{kabupaten}/{kecamatan}/{desa}', 'getbydesa');
-});
+
 
 Route::post('/reset-first-password', [ResetPasswordController::class, 'resetFirstPassword'])->name('reset-first-password');
 
