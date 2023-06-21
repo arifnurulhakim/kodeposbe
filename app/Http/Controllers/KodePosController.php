@@ -49,6 +49,84 @@ class KodePosController extends Controller
                 return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
+    public function getbykabupaten($provinsi,$kabupaten){
+        try{
+            $kodepos = KodePos::select('kode_pos.*', 'desas.nama_desa', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
+            ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_desa')
+            ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
+            ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
+            ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
+            ->where('provinsis.nama_provinsi',$provinsi)
+            ->where('kabupatens.nama_kabupaten',$kabupaten)
+            ->get(); // Mengatur jumlah item per halaman menjadi jumlah total data
+
+                return response()->json([
+                    'status' => 'success',
+                    'data' => $kodepos, // Mengambil hanya item-datanya saja
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+    public function getbykecamatan($provinsi,$kabupaten,$kecamatan){
+        try{
+            $kodepos = KodePos::select('kode_pos.*', 'desas.nama_desa', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
+            ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_desa')
+            ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
+            ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
+            ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
+            ->where('provinsis.nama_provinsi',$provinsi)
+            ->where('kabupatens.nama_kabupaten',$kabupaten)
+            ->where('kecamatans.nama_kecamatan',$kecamatan)
+            ->get(); // Mengatur jumlah item per halaman menjadi jumlah total data
+
+                return response()->json([
+                    'status' => 'success',
+                    'data' => $kodepos, // Mengambil hanya item-datanya saja
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+    public function getbydesa($provinsi,$kabupaten,$kecamatan,$desa){
+        try{
+            $kodepos = KodePos::select('kode_pos.*', 'desas.nama_desa', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
+            ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_desa')
+            ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
+            ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
+            ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
+            ->where('provinsis.nama_provinsi',$provinsi)
+            ->where('kabupatens.nama_kabupaten',$kabupaten)
+            ->where('kecamatans.nama_kecamatan',$kecamatan)
+            ->where('desas.nama_desa',$desa)
+            ->get(); // Mengatur jumlah item per halaman menjadi jumlah total data
+
+                return response()->json([
+                    'status' => 'success',
+                    'data' => $kodepos, // Mengambil hanya item-datanya saja
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+    public function getbykodepos($kodepos){
+        try{
+            $kodepos = KodePos::select('kode_pos.*', 'desas.nama_desa', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
+            ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_desa')
+            ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
+            ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
+            ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
+            ->where('kode_pos.kode_new',$kodepos)
+            ->get(); // Mengatur jumlah item per halaman menjadi jumlah total data
+
+                return response()->json([
+                    'status' => 'success',
+                    'data' => $kodepos, // Mengambil hanya item-datanya saja
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
     
     public function store(Request $request)
     {
