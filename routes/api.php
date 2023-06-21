@@ -65,7 +65,7 @@ Route::controller(ProvController::class)->group(function () {
 });
 Route::controller(KodePosController::class)->group(function () {
     Route::get('/kode-pos/kodepos/{kodepos}', 'getbykodepos');
-    Route::get('/kode-pos/provinsi/{provinsi}', 'getbyprovinsi');
+    Route::get('/kode-pos/allprovinsi/{provinsi}', 'getbyprovinsi');
     Route::get('/kode-pos/{provinsi}/{kabupaten}', 'getbykabupaten');
     Route::get('/kode-pos/{provinsi}/{kabupaten}/{kecamatan}', 'getbykecamatan');
     Route::get('/kode-pos/{provinsi}/{kabupaten}/{kecamatan}/{desa}', 'getbydesa');
