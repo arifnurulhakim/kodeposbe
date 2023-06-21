@@ -33,7 +33,7 @@ class KodePosController extends Controller
 
     public function getbyprovinsi($provinsi){
         try{
-            $kodepos = KodePos::select('kode_pos.*', 'desas.nama_desa', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
+            $kodepos = KodePos::select('kecamatans.nama_kecamatan')
             ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_desa')
             ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
             ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
