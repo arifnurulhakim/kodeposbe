@@ -124,7 +124,7 @@ class KodePosController extends Controller
             ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
             ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
             ->where('kode_pos.kode_new',$kodepos)
-            ->get(); // Mengatur jumlah item per halaman menjadi jumlah total data
+            ->first(); // Mengatur jumlah item per halaman menjadi jumlah total data
 
                 return response()->json([
                     'status' => 'success',
