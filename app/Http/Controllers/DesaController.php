@@ -23,7 +23,7 @@ class DesaController extends Controller
             }
             
             $data = $desa->get();
-            $totalData = $data->count();
+            $totalData = Desa::count();
     
             return response()->json([
                 'status' => 'success',
