@@ -10,26 +10,25 @@ class DesaController extends Controller
     public function index(Request $request)
     {
         try {
-            $perPage = $request->input('perPage', 10);
-            $currentPage = $request->input('currentPage', 1);
-    
+            $first = $request->input('first', 1);
+            $last = $request->input('last', 10);
+            
             $desa = Desa::select('desas.*', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
                 ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
                 ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
-                ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
-                ->paginate($perPage, ['*'], 'page', $currentPage);
-    
-            $totalData = $desa->total();
-            $totalPage = $desa->lastPage();
+                ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov');
+            
+            if ($first !== null && $last !== null) {
+                $desa->skip($first - 1)->take($last - $first + 1);
+            }
+            
+            $data = $desa->get();
+            $totalData = $data->count();
     
             return response()->json([
                 'status' => 'success',
                 'total_data' => $totalData,
-                'total_page' => $totalPage,
-                'per_page' => $perPage,
-                'current_page' => $currentPage,
-                'data' => $desa->items(),
-               
+                'data' => $data,
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
