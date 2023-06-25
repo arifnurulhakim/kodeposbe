@@ -7,11 +7,11 @@ use App\Models\Desa;
 
 class DesaController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $first = null, $last = null)
     {
         try {
-            $first = $request->input('first', 1);
-            $last = $request->input('last', 10);
+            $first = $first ?? $request->input('first', 1);
+            $last = $last ?? $request->input('last', 10);
             
             $desa = Desa::select('desas.*', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
                 ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')

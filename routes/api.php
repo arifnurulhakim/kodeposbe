@@ -133,7 +133,7 @@ Route::middleware('auth:api')->group(function () {
     });
     
     Route::controller(DesaController::class)->group(function () {
-        Route::get('/desa', 'index');
+        Route::get('/desa/{first?}/{last?}','index');
         Route::post('/desa', 'store');
         Route::get('/desa/{id}', 'show');
         Route::put('/desa/{id}', 'update');
