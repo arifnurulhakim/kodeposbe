@@ -19,13 +19,15 @@ class KodePosController extends Controller
                 ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_desa')
                 ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
                 ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
-                ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
-                ->paginate(10); // Mengatur jumlah item per halaman menjadi jumlah total data
-    
-            return response()->json([
-                'status' => 'success',
-                'data' => $kodepos->items(), // Mengambil hanya item-datanya saja
-            ], 200);
+                ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov');
+                $data = $kodepos->get();
+                $totalData = KodePos::count();
+        
+                return response()->json([
+                    'status' => 'success',
+                    'total_data' => $totalData,
+                    'data' => $data,
+                ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
