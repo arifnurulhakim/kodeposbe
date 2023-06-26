@@ -10,17 +10,17 @@ class DesaController extends Controller
     public function index(Request $request, $first = null, $last = null)
     {
         try {
-            $first = $first ?? $request->input('first', 1);
-            $last = $last ?? $request->input('last', 10);
+            $first = $first ?? $request->input('first');
+            $last = $last ?? $request->input('last');
             
             $desa = Desa::select('desas.*', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
                 ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
                 ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
                 ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov');
             
-            if ($first !== null && $last !== null) {
-                $desa->skip($first - 1)->take($last - $first + 1);
-            }
+            // if ($first !== null && $last !== null) {
+            //     $desa->skip($first - 1)->take($last - $first + 1);
+            // }
             
             $data = $desa->get();
             $totalData = Desa::count();
