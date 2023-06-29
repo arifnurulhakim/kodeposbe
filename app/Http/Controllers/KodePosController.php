@@ -32,6 +32,41 @@ class KodePosController extends Controller
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
+    public function dashboard()
+    {
+        try {
+            // Ambil data provinsi
+            $provinsi = DB::table('provinsis')->get();
+            $jumlahProvinsi = count($provinsi);
+    
+            // Ambil data kabupaten
+            $kabupaten = DB::table('kabupatens')->get();
+            $jumlahKabupaten = count($kabupaten);
+    
+            // Ambil data kecamatan
+            $kecamatan = DB::table('kecamatans')->get();
+            $jumlahKecamatan = count($kecamatan);
+    
+            // Ambil data desa
+            $desa = DB::table('desas')->get();
+            $jumlahDesa = count($desa);
+    
+            return response()->json([
+                'status' => 'success',
+                'jumlah_provinsi' => $jumlahProvinsi,
+
+                'jumlah_kabupaten' => $jumlahKabupaten,
+
+                'jumlah_kecamatan' => $jumlahKecamatan,
+
+                'jumlah_desa' => $jumlahDesa,
+
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+    
 
     public function getbyprovinsi($provinsi){
         try{
