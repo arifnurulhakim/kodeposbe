@@ -7,6 +7,11 @@ use App\Models\KodePos;
 use App\Models\UserLog; // Tambahkan ini untuk mengakses model UserLog
 use Illuminate\Support\Facades\Auth;// Tambahkan ini untuk mengakses data user yang sedang login
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\DB;
+use App\Models\Provinsi;
+use App\Models\Kabupaten;
+use App\Models\Kecamatan;
+use App\Models\Desa;
 
 class KodePosController extends Controller
 {
@@ -16,7 +21,7 @@ class KodePosController extends Controller
         
     
             $kodepos = KodePos::select('kode_pos.*', 'desas.nama_desa', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
-                ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_desa')
+                ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
                 ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
                 ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
                 ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov');
@@ -36,30 +41,38 @@ class KodePosController extends Controller
     {
         try {
             // Ambil data provinsi
-            $provinsi = DB::table('provinsis')->get();
-            $jumlahProvinsi = count($provinsi);
+            $kodepos = KodePos::all();
+            $jumlahKodepos = $kodepos->count();
+    
+            $provinsi = Provinsi::all();
+            $jumlahProvinsi = $provinsi->count();
     
             // Ambil data kabupaten
-            $kabupaten = DB::table('kabupatens')->get();
-            $jumlahKabupaten = count($kabupaten);
+            $kabupaten = Kabupaten::all();
+            $jumlahKabupaten = $kabupaten->count();
     
             // Ambil data kecamatan
-            $kecamatan = DB::table('kecamatans')->get();
-            $jumlahKecamatan = count($kecamatan);
+            $kecamatan = Kecamatan::all();
+            $jumlahKecamatan = $kecamatan->count();
     
             // Ambil data desa
-            $desa = DB::table('desas')->get();
-            $jumlahDesa = count($desa);
+            $desa = Desa::all();
+            $jumlahDesa = $desa->count();
     
             return response()->json([
                 'status' => 'success',
-                'jumlah_provinsi' => $jumlahProvinsi,
-
-                'jumlah_kabupaten' => $jumlahKabupaten,
-
-                'jumlah_kecamatan' => $jumlahKecamatan,
-
-                'jumlah_desa' => $jumlahDesa,
+                'data' =>[
+                    'jumlah_provinsi' => $jumlahProvinsi,
+        
+                    'jumlah_kabupaten' => $jumlahKabupaten,
+      
+                    'jumlah_kecamatan' => $jumlahKecamatan,
+    
+                    'jumlah_desa' => $jumlahDesa,
+    
+                    'jumlah_kodepos' => $jumlahKodepos
+                ]
+               
 
             ], 200);
         } catch (\Exception $e) {
@@ -71,7 +84,7 @@ class KodePosController extends Controller
     public function getbyprovinsi($provinsi){
         try{
             $kodepos = KodePos::select('kabupatens.nama_kabupaten')
-            ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_desa')
+            ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
             ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
             ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
             ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
@@ -92,7 +105,7 @@ class KodePosController extends Controller
     public function getbykabupaten($provinsi,$kabupaten){
         try{
             $kodepos = KodePos::select('kecamatans.nama_kecamatan')
-            ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_desa')
+            ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
             ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
             ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
             ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
@@ -113,7 +126,7 @@ class KodePosController extends Controller
     public function getbykecamatan($provinsi,$kabupaten,$kecamatan){
         try{
             $kodepos = KodePos::select('desas.nama_desa')
-            ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_desa')
+            ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
             ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
             ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
             ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
@@ -134,8 +147,8 @@ class KodePosController extends Controller
     }
     public function getbydesa($provinsi,$kabupaten,$kecamatan,$desa){
         try{
-            $kodepos = KodePos::select('kode_pos.*', 'desas.nama_desa', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
-            ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_desa')
+            $kodeposData = KodePos::select('kode_pos.*', 'desas.*', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan',DB::raw("ST_AsGeoJSON(desas.geom) AS geojson"),)
+            ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
             ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
             ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
             ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
@@ -143,34 +156,151 @@ class KodePosController extends Controller
             ->where('kabupatens.nama_kabupaten',$kabupaten)
             ->where('kecamatans.nama_kecamatan',$kecamatan)
             ->where('desas.nama_desa',$desa)
-            ->first(); // Mengatur jumlah item per halaman menjadi jumlah total data
+            ->first(); 
 
+            $url = 'https://sistemkodeposkominfo.com/index.html#/detail/' . $kodeposData->kode_new;
+            $qrCode = QrCode::format('png')->size(300)->generate($url);
+            $base64 = base64_encode($qrCode);
+            
+            
+            if($kodeposData){
                 return response()->json([
                     'status' => 'success',
-                    'data' => $kodepos, // Mengambil hanya item-datanya saja
+                    'qrcode'=> $base64,
+                     'longitude'=>$kodeposData->longitude,
+                    'latitude'=>$kodeposData->latitude,
+                    'geojson' => $kodeposData->geojson,
+                   
+                    'data' => $kodeposData,
+                  
+
                 ], 200);
+            } else {
+                return response()->json(['message' => 'Wilayah not found'], 404);
+            }
             } catch (\Exception $e) {
                 return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
     public function getbykodepos($kodepos){
         try{
-            $kodepos = KodePos::select('kode_pos.*', 'desas.nama_desa', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
-            ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_desa')
-            ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
-            ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
-            ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
-            ->where('kode_pos.kode_new',$kodepos)
-            ->first(); // Mengatur jumlah item per halaman menjadi jumlah total data
-
+            $kodepos = trim($kodepos); // Menghapus spasi di awal dan akhir kodepos
+            $digitCount = strlen($kodepos); // Menghitung jumlah karakter dalam kodepos
+            
+            if($digitCount === 5){
+                $getkodeposData = KodePos::select(  DB::raw("ST_AsGeoJSON(desas.geom) AS geojson"),'kode_pos.*', 'desas.*', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
+                ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
+                ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
+                ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
+                ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
+                ->where('kode_pos.kode_old', $kodepos)
+                ->get();
+            
+            if ($getkodeposData->isEmpty()) {
+                $response = [
+                    'status' => 'error',
+                    'message' => 'Data tidak ditemukan.'
+                ];
+            } else {
+                $data = $getkodeposData->first()->toArray();
+                $desas = $getkodeposData->map(function ($item) {
+                    return [
+                        'kode_dagri' => $item['kode_dagri'],
+                        'kode_mod' => $item['kode_mod'],
+                        'kode_new' => $item['kode_new'],
+                        'nama_desa' => $item['nama_desa'],
+                    ];
+                });
+                $kodeposData= [
+                        'kode_old' => $data['kode_old'],
+                        'nama_provinsi' => $data['nama_provinsi'],
+                        'nama_kabupaten' => $data['nama_kabupaten'],
+                        'nama_kecamatan' => $data['nama_kecamatan'],
+                        'desas' => $desas
+                ];
+            }
+            } elseif($digitCount === 7){
+                $kodeposData = KodePos::select(
+                    'kode_pos.*',
+                    'desas.*',
+                    'provinsis.nama_provinsi',
+                    'kabupatens.nama_kabupaten',
+                    'kecamatans.nama_kecamatan',
+                    DB::raw("ST_AsGeoJSON(desas.geom) AS geojson")
+                )
+                    ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
+                    ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
+                    ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
+                    ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
+                    ->where('kode_pos.kode_new', $kodepos)
+                    ->first();
+                
+            } elseif($digitCount === 10){
+                $kodeposData = KodePos::select(  DB::raw("ST_AsGeoJSON(desas.geom) AS geojson"),'kode_pos.*', 'desas.*', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
+                    ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
+                    ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
+                    ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
+                    ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
+                    ->where('kode_pos.kode_dagri', $kodepos)
+                    ->first();
+            } else {
+                return response()->json(['message' => 'Invalid Kodepos'], 400);
+            }
+            $url = 'https://sistemkodeposkominfo.com/index.html#/detail/' . $kodeposData->kode_new;
+            $qrCode = QrCode::format('png')->size(300)->generate($url);
+            
+            // Convert QR code image to base64
+            $base64 = base64_encode($qrCode);
+            
+            
+            if($kodeposData){
                 return response()->json([
                     'status' => 'success',
-                    'data' => $kodepos, // Mengambil hanya item-datanya saja
+                    'qrcode'=> $base64,
+                     'longitude'=>$kodeposData->longitude,
+                    'latitude'=>$kodeposData->latitude,
+                    'geojson' => $kodeposData->geojson,
+                   
+                    'data' => $kodeposData,
+                  
+
                 ], 200);
-            } catch (\Exception $e) {
-                return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            } else {
+                return response()->json(['message' => 'Kodepos not found'], 404);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
+    
+    public function getbywilayah()
+    {
+        try {
+            $kodepos = KodePos::select('kode_pos.*', 'desas.nama_desa', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
+                ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
+                ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
+                ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
+                ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
+                // ->where('desas.nama_desa', $wilayah) // Filter based on the given $wilayah
+                ->get();
+    
+            $data = $kodepos->map(function ($item) {
+                return [
+                    'wilayah' => $item->nama_desa.','. $item->nama_kecamatan.','.$item->nama_kabupaten.','. $item->nama_provinsi
+                ];
+            });
+    
+            return response()->json([
+                'status' => 'success',
+                'data' => $data,
+                
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+    
+
     
     public function store(Request $request)
     {

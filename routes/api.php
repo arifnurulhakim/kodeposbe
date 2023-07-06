@@ -67,6 +67,7 @@ Route::controller(KodePosController::class)->group(function () {
 
     Route::get('/kode-pos/kodepos', 'getallkodepos');
     Route::get('/kode-pos/kodepos/{kodepos}', 'getbykodepos');
+    Route::get('/kode-pos/wilayah', 'getbywilayah');
     Route::get('/kode-pos/allprovinsi/{provinsi}', 'getbyprovinsi');
     Route::get('/kode-pos/allprovinsi/{provinsi}/{kabupaten}', 'getbykabupaten');
     Route::get('/kode-pos/allprovinsi/{provinsi}/{kabupaten}/{kecamatan}', 'getbykecamatan');
@@ -91,7 +92,7 @@ Route::middleware('auth:api')->group(function () {
         Route::put('/kode-pos/{id}', 'update');
         Route::delete('/kode-pos/{id}', 'destroy');
         Route::get('/kode-pos/qrcode/{id}', 'generateQrCode');
-        Route::get('/kode-pos/dashboard', 'dashboard');
+        Route::get('/dashboard', 'dashboard');
 
     });
 
@@ -134,7 +135,7 @@ Route::middleware('auth:api')->group(function () {
     });
     
     Route::controller(DesaController::class)->group(function () {
-        Route::get('/desa/{first?}/{last?}','index');
+        Route::get('/desa','index');
         Route::post('/desa', 'store');
         Route::get('/desa/{id}', 'show');
         Route::put('/desa/{id}', 'update');
