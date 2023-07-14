@@ -12,6 +12,7 @@ use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
 use App\Models\Desa;
+use App\Models\PotensiDesa;
 
 class KodePosController extends Controller
 {
@@ -147,11 +148,23 @@ class KodePosController extends Controller
     }
     public function getbydesa($provinsi,$kabupaten,$kecamatan,$desa){
         try{
-            $kodeposData = KodePos::select('kode_pos.*', 'desas.*', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan',DB::raw("ST_AsGeoJSON(desas.geom) AS geojson"),)
+            $kodeposData = KodePos::select( DB::raw("ST_AsGeoJSON(desas.geom) AS geojson"),
+            'kode_pos.*',
+            'desas.*',
+            'provinsis.nama_provinsi',
+            'kabupatens.nama_kabupaten',
+            'kecamatans.nama_kecamatan',
+            'potensi_desas.jumlah_penduduk',
+            'potensi_desas.jumlah_fasilitas_pendidikan',
+            'potensi_desas.jumlah_fasilitas_ibadah',
+            'potensi_desas.jumlah_tempat_wisata',
+            'potensi_desas.jumlah_industri_kecil'
+        )
             ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
             ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
             ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
             ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
+            ->leftJoin('potensi_desas', 'desas.kode_dagri', '=', 'potensi_desas.kode_dagri')
             ->where('provinsis.nama_provinsi',$provinsi)
             ->where('kabupatens.nama_kabupaten',$kabupaten)
             ->where('kecamatans.nama_kecamatan',$kecamatan)
@@ -178,6 +191,8 @@ class KodePosController extends Controller
             } else {
                 return response()->json(['message' => 'Wilayah not found'], 404);
             }
+
+            
             } catch (\Exception $e) {
                 return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
@@ -187,80 +202,204 @@ class KodePosController extends Controller
             $kodepos = trim($kodepos); // Menghapus spasi di awal dan akhir kodepos
             $digitCount = strlen($kodepos); // Menghitung jumlah karakter dalam kodepos
             
-            if($digitCount === 5){
-                $getkodeposData = KodePos::select(  DB::raw("ST_AsGeoJSON(desas.geom) AS geojson"),'kode_pos.*', 'desas.*', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
-                ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
-                ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
-                ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
-                ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
-                ->where('kode_pos.kode_old', $kodepos)
-                ->get();
-            
-            if ($getkodeposData->isEmpty()) {
-                $response = [
-                    'status' => 'error',
-                    'message' => 'Data tidak ditemukan.'
-                ];
-            } else {
-                $data = $getkodeposData->first()->toArray();
-                $desas = $getkodeposData->map(function ($item) {
-                    return [
-                        'kode_dagri' => $item['kode_dagri'],
-                        'kode_mod' => $item['kode_mod'],
-                        'kode_new' => $item['kode_new'],
-                        'nama_desa' => $item['nama_desa'],
-                    ];
-                });
-                $kodeposData= [
-                        'kode_old' => $data['kode_old'],
-                        'nama_provinsi' => $data['nama_provinsi'],
-                        'nama_kabupaten' => $data['nama_kabupaten'],
-                        'nama_kecamatan' => $data['nama_kecamatan'],
-                        'desas' => $desas
-                ];
-            }
-            } elseif($digitCount === 7){
-                $kodeposData = KodePos::select(
+            if ($digitCount === 5) {
+                $getkodeposData = KodePos::select(
+                    DB::raw("ST_AsGeoJSON(desas.geom) AS geojson"),
                     'kode_pos.*',
                     'desas.*',
                     'provinsis.nama_provinsi',
                     'kabupatens.nama_kabupaten',
                     'kecamatans.nama_kecamatan',
-                    DB::raw("ST_AsGeoJSON(desas.geom) AS geojson")
+                    'potensi_desas.jumlah_penduduk',
+                    'potensi_desas.jumlah_fasilitas_pendidikan',
+                    'potensi_desas.jumlah_fasilitas_ibadah',
+                    'potensi_desas.jumlah_tempat_wisata',
+                    'potensi_desas.jumlah_industri_kecil'
                 )
                     ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
                     ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
                     ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
                     ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
-                    ->where('kode_pos.kode_new', $kodepos)
-                    ->first();
-                
-            } elseif($digitCount === 10){
-                $kodeposData = KodePos::select(  DB::raw("ST_AsGeoJSON(desas.geom) AS geojson"),'kode_pos.*', 'desas.*', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten', 'kecamatans.nama_kecamatan')
+                    ->leftJoin('potensi_desas', 'desas.kode_dagri', '=', 'potensi_desas.kode_dagri')
+                    ->where('kode_pos.kode_old', $kodepos)
+                    ->orderby('kode_pos','desc')
+                    ->get();
+                    // dd($getkodeposData);
+                    $longitude = $getkodeposData->first()->longitude; // Mengambil longitude dari data pertama
+                    $latitude = $getkodeposData->last()->latitude; // Mengambil latitude dari data terakhir
+                    // $geojsonCollection = collect($getkodeposData)->flatMap(function ($data) {
+                    //     $geoJson = json_decode($data->geojson, true);
+                    //     return $geoJson;
+                    // });
+                    
+                    // $combinedGeojson = [
+                    //     'type' => 'FeatureCollection',
+                    //     'features' => $geojsonCollection->all(),
+                    // ];
+                    
+                    // $geojson = json_encode($combinedGeojson);
+                    
+                   // Menginisialisasi array kosong untuk menyimpan semua fitur GeoJSON
+$features = [];
+
+// Mengambil hasil query
+$results = $getkodeposData;
+
+// Iterasi melalui setiap baris hasil query
+foreach ($results as $result) {
+    // Mendapatkan GeoJSON dari kolom 'geojson'
+    $geoJson = json_decode($result->geojson);
+
+    // Membuat fitur GeoJSON baru dengan properti yang sesuai
+    $feature = [
+        'type' => 'Feature',
+        'geometry' => $geoJson,
+        'properties' => [
+            'kode_pos' => $result->kode_pos,
+            'nama_desa' => $result->nama_desa,
+            'nama_kecamatan' => $result->nama_kecamatan,
+            'nama_kabupaten' => $result->nama_kabupaten,
+            'nama_provinsi' => $result->nama_provinsi,
+        ],
+    ];
+
+    // Menambahkan fitur ke array fitur
+    $features[] = $feature;
+}
+
+// Membuat struktur GeoJSON akhir dengan semua fitur yang digabungkan
+$geojsonResult = [
+    'type' => 'FeatureCollection',
+    'features' => $features,
+];
+
+// Mengonversi hasil ke format JSON
+$geojson = json_encode($geojsonResult);
+
+// $combinedGeoJSON sekarang berisi GeoJSON tunggal yang digabungkan
+
+
+         
+                if ($getkodeposData->isEmpty()) {
+                    $response = [
+                        'status' => 'error',
+                        'message' => 'Data tidak ditemukan.'
+                    ];
+                } else {
+
+                    $data = $getkodeposData->first()->toArray();
+                  $desas = $getkodeposData->map(function ($item) {
+                    return (object) [
+                        'kode_dagri' => $item['kode_dagri'],
+                        'kode_mod' => $item['kode_mod'],
+                        'kode_new' => $item['kode_new'],
+                        'nama_desa' => $item['nama_desa'],
+                        'jumlah_penduduk' => $item['jumlah_penduduk'],
+                        'jumlah_fasilitas_pendidikan' => $item['jumlah_fasilitas_pendidikan'],
+                        'jumlah_fasilitas_ibadah' => $item['jumlah_fasilitas_ibadah'],
+                        'jumlah_tempat_wisata' => $item['jumlah_tempat_wisata'],
+                        'jumlah_industri_kecil' => $item['jumlah_industri_kecil'],
+                    ];
+                    
+                    });
+
+
+                    // dd($desas);
+            
+                    $kodeposData = [
+                        'kode_old' => $data['kode_old'],
+                        'nama_provinsi' => $data['nama_provinsi'],
+                        'nama_kabupaten' => $data['nama_kabupaten'],
+                        'nama_kecamatan' => $data['nama_kecamatan'],
+                        'desas' => $desas
+                    ];
+                   
+                }
+           
+
+                        
+            $url = 'https://sistemkodeposkominfo.com/index.html#/detail/' . $kodeposData['kode_old'];
+            $qrCode = QrCode::format('png')->size(300)->generate($url);
+
+            // Convert QR code image to base64
+            $base64 = base64_encode($qrCode);
+            }
+            
+             elseif($digitCount === 7){
+                $kodeposData = KodePos::select(
+                    DB::raw("ST_AsGeoJSON(desas.geom) AS geojson"),
+                    'kode_pos.*',
+                    'desas.*',
+                    'provinsis.nama_provinsi',
+                    'kabupatens.nama_kabupaten',
+                    'kecamatans.nama_kecamatan',
+                    'potensi_desas.jumlah_penduduk',
+                    'potensi_desas.jumlah_fasilitas_pendidikan',
+                    'potensi_desas.jumlah_fasilitas_ibadah',
+                    'potensi_desas.jumlah_tempat_wisata',
+                    'potensi_desas.jumlah_industri_kecil'
+                )
                     ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
                     ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
                     ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
                     ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
-                    ->where('kode_pos.kode_dagri', $kodepos)
+                    ->leftJoin('potensi_desas', 'desas.kode_dagri', '=', 'potensi_desas.kode_dagri')
+                    ->where('kode_pos.kode_new', $kodepos)
                     ->first();
+                    $geojson = $kodeposData->geojson;
+
+                    $longitude = $kodeposData->longitude;
+                    $latitude = $kodeposData->latitude;
+
+                    $url = 'https://sistemkodeposkominfo.com/index.html#/detail/' . $kodeposData->kode_new;
+                    $qrCode = QrCode::format('png')->size(300)->generate($url);
+                    
+                    // Convert QR code image to base64
+                    $base64 = base64_encode($qrCode);
+                
+            } elseif($digitCount === 10){
+                $kodeposData = KodePos::select(  DB::raw("ST_AsGeoJSON(desas.geom) AS geojson"),
+                'kode_pos.*',
+                'desas.*',
+                'provinsis.nama_provinsi',
+                'kabupatens.nama_kabupaten',
+                'kecamatans.nama_kecamatan',
+                'potensi_desas.jumlah_penduduk',
+                'potensi_desas.jumlah_fasilitas_pendidikan',
+                'potensi_desas.jumlah_fasilitas_ibadah',
+                'potensi_desas.jumlah_tempat_wisata',
+                'potensi_desas.jumlah_industri_kecil'
+            )
+                ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
+                ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
+                ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
+                ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')
+                ->leftJoin('potensi_desas', 'desas.kode_dagri', '=', 'potensi_desas.kode_dagri')
+                ->where('kode_pos.kode_dagri', $kodepos)
+                    ->first();
+
+                    
+
+                    $geojson = $kodeposData->geojson;
+                    $longitude = $kodeposData->longitude;
+                    $latitude = $kodeposData->latitude;
+
+                    $url = 'https://sistemkodeposkominfo.com/index.html#/detail/' . $kodeposData->kode_new;
+                    $qrCode = QrCode::format('png')->size(300)->generate($url);
+                    
+                    // Convert QR code image to base64
+                    $base64 = base64_encode($qrCode);
             } else {
                 return response()->json(['message' => 'Invalid Kodepos'], 400);
             }
-            $url = 'https://sistemkodeposkominfo.com/index.html#/detail/' . $kodeposData->kode_new;
-            $qrCode = QrCode::format('png')->size(300)->generate($url);
-            
-            // Convert QR code image to base64
-            $base64 = base64_encode($qrCode);
-            
-            
+           
             if($kodeposData){
                 return response()->json([
                     'status' => 'success',
                     'qrcode'=> $base64,
-                     'longitude'=>$kodeposData->longitude,
-                    'latitude'=>$kodeposData->latitude,
-                    'geojson' => $kodeposData->geojson,
-                   
+                    'longitude'=>$longitude,
+                    'latitude'=>$latitude,
+                    'geojson' => $geojson,
                     'data' => $kodeposData,
                   
 

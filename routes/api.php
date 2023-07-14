@@ -17,6 +17,7 @@ use App\Http\Controllers\DesaController;
 use App\Http\Controllers\KodePosController;
 use App\Http\Controllers\UserLogController;
 use App\Http\Controllers\PengirimanController;
+use App\Http\Controllers\PotensiDesaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -116,6 +117,15 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/provinsi/{id}', 'show');
         Route::put('/provinsi/{id}', 'update');
         Route::delete('/provinsi/{id}', 'destroy');
+    });
+    
+
+    Route::controller(PotensiDesaController::class)->group(function () {
+        Route::get('/potensidesa', 'index');
+        Route::post('/potensidesa', 'store');
+        Route::get('/potensidesa/{id}', 'show');
+        Route::put('/potensidesa/{id}', 'update');
+        Route::delete('/potensidesa/{id}', 'destroy');
     });
     
     Route::controller(KabController::class)->group(function () {
