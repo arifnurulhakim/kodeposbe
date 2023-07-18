@@ -318,7 +318,7 @@ $geojson = json_encode($geojsonResult);
            
 
                         
-            $url = 'https://sistemkodeposkominfo.com/index.html#/detail/' . $kodeposData['kode_old'];
+            $url = 'https://sistemkodeposkominfo.com/index.html#/detail-list/' . $kodeposData['kode_old'];
             $qrCode = QrCode::format('png')->size(300)->generate($url);
 
             // Convert QR code image to base64
@@ -347,6 +347,7 @@ $geojson = json_encode($geojsonResult);
                     ->where('kode_pos.kode_new', $kodepos)
                     ->first();
                     $geojson = $kodeposData->geojson;
+                    // dd($geojson);
 
                     $longitude = $kodeposData->longitude;
                     $latitude = $kodeposData->latitude;
