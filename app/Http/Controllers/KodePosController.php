@@ -255,12 +255,14 @@ class KodePosController extends Controller
                 'properties' => [
                     'kode_pos' => $result->kode_new,
                     'kode_dagri' => $result->kode_dagri,
-                    'nama_desa' => $result->nama_desa,
-                    'nama_kecamatan' => $result->nama_kecamatan,
-                    'nama_kabupaten' => $result->nama_kabupaten,
-                    'nama_provinsi' => $result->nama_provinsi,
+                    'nama_desa' => ucwords(strtolower($result->nama_desa)),
+        'nama_kecamatan' => ucwords(strtolower($result->nama_kecamatan)),
+        'nama_kabupaten' => ucwords(strtolower($result->nama_kabupaten)),
+        'nama_provinsi' => ucwords(strtolower($result->nama_provinsi)),
                 ],
             ];
+
+          
 
             // Menambahkan fitur ke array fitur
             $features[] = $feature;
