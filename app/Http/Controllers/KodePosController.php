@@ -146,6 +146,11 @@ class KodePosController extends Controller
     }
     public function getbydesa($provinsi,$kabupaten,$kecamatan,$desa){
         try{
+            $provinsi = strtoupper(trim($provinsi));
+            $kabupaten = strtoupper(trim($kabupaten));
+            $kecamatan = strtoupper(trim($kecamatan));
+            $desa = strtoupper(trim($desa));            
+       
             $kodeposData = KodePos::select( DB::raw("ST_AsGeoJSON(desas.geom) AS geojson"),
             'kode_pos.*',
             'desas.*',
@@ -168,20 +173,41 @@ class KodePosController extends Controller
             ->where('kecamatans.nama_kecamatan',$kecamatan)
             ->where('desas.nama_desa',$desa)
             ->first(); 
+            // dd($kodeposData);
 
+            $geojson = $kodeposData->geojson;
+            $longitude = $kodeposData->longitude;
+            $latitude = $kodeposData->latitude;
             $url = 'https://sistemkodeposkominfo.com/index.html#/detail/' . $kodeposData->kode_new;
             $qrCode = QrCode::format('png')->size(300)->generate($url);
+            
+            // Convert QR code image to base64
             $base64 = base64_encode($qrCode);
+
+            $kodeposData = [
+                'kode_old' => $kodeposData->kode_old,
+                'kode_new' => $kodeposData->kode_new,
+                'kode_dagri' => $kodeposData->kode_dagri,
+                'nama_desa' => ucwords(strtolower($kodeposData->nama_desa)),
+                'nama_kecamatan' => ucwords(strtolower($kodeposData->nama_kecamatan)),
+                'nama_kabupaten' => ucwords(strtolower($kodeposData->nama_kabupaten)),
+                'nama_provinsi' => ucwords(strtolower($kodeposData->nama_provinsi)),
+                'jumlah_penduduk' => $kodeposData->jumlah_penduduk,
+                'jumlah_fasilitas_pendidikan' => $kodeposData->jumlah_fasilitas_pendidikan,
+                'jumlah_fasilitas_ibadah' => $kodeposData->jumlah_fasilitas_ibadah,
+                'jumlah_tempat_wisata' => $kodeposData->jumlah_tempat_wisata,
+                'jumlah_industri_kecil' => $kodeposData->jumlah_industri_kecil,
+            ];
+
             
             
             if($kodeposData){
                 return response()->json([
                     'status' => 'success',
                     'qrcode'=> $base64,
-                     'longitude'=>$kodeposData->longitude,
-                    'latitude'=>$kodeposData->latitude,
-                    'geojson' => $kodeposData->geojson,
-                   
+                    'longitude'=>$longitude,
+                    'latitude'=>$latitude,
+                    'geojson' => $geojson,
                     'data' => $kodeposData,
                   
 
