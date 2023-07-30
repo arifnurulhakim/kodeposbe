@@ -165,7 +165,7 @@ class KodePosController extends Controller
             'potensi_desas.jumlah_bts',
             'potensi_desas.jumlah_operator',
             'potensi_desas.jumlah_kantor_pos',
-            'potensi_desas.jumlah_kantor_kurlog',
+            'potensi_desas.jumlah_kurlog',
         )
             ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
             ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
@@ -250,7 +250,7 @@ class KodePosController extends Controller
                     'potensi_desas.jumlah_bts',
                     'potensi_desas.jumlah_operator',
                     'potensi_desas.jumlah_kantor_pos',
-                    'potensi_desas.jumlah_kantor_kurlog',
+                    'potensi_desas.jumlah_kurlog',
                 )
                     ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
                     ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
@@ -379,7 +379,7 @@ class KodePosController extends Controller
                             'potensi_desas.jumlah_bts',
                             'potensi_desas.jumlah_operator',
                             'potensi_desas.jumlah_kantor_pos',
-                            'potensi_desas.jumlah_kantor_kurlog',
+                            'potensi_desas.jumlah_kurlog',
                         )
                             ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
                             ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
@@ -430,7 +430,7 @@ class KodePosController extends Controller
                         'potensi_desas.jumlah_bts',
                         'potensi_desas.jumlah_operator',
                         'potensi_desas.jumlah_kantor_pos',
-                        'potensi_desas.jumlah_kantor_kurlog',
+                        'potensi_desas.jumlah_kurlog',
                     )
                         ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
                         ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
