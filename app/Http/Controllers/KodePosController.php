@@ -161,7 +161,11 @@ class KodePosController extends Controller
             'potensi_desas.jumlah_fasilitas_pendidikan',
             'potensi_desas.jumlah_fasilitas_ibadah',
             'potensi_desas.jumlah_tempat_wisata',
-            'potensi_desas.jumlah_industri_kecil'
+            'potensi_desas.jumlah_industri_kecil',
+            'potensi_desas.jumlah_bts',
+            'potensi_desas.jumlah_operator',
+            'potensi_desas.jumlah_kantor_pos',
+            'potensi_desas.jumlah_kantor_kurlog',
         )
             ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
             ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
@@ -197,6 +201,10 @@ class KodePosController extends Controller
                 'jumlah_fasilitas_ibadah' => $kodeposData->jumlah_fasilitas_ibadah,
                 'jumlah_tempat_wisata' => $kodeposData->jumlah_tempat_wisata,
                 'jumlah_industri_kecil' => $kodeposData->jumlah_industri_kecil,
+                'jumlah_bts' => $kodeposData->jumlah_bts,
+                'jumlah_operator' => $kodeposData->jumlah_operator,
+                'jumlah_kantor_pos' => $kodeposData->jumlah_kantor_pos,
+                'jumlah_kurlog' => $kodeposData->jumlah_kurlog,
             ];
 
             
@@ -238,7 +246,11 @@ class KodePosController extends Controller
                     'potensi_desas.jumlah_fasilitas_pendidikan',
                     'potensi_desas.jumlah_fasilitas_ibadah',
                     'potensi_desas.jumlah_tempat_wisata',
-                    'potensi_desas.jumlah_industri_kecil'
+                    'potensi_desas.jumlah_industri_kecil',
+                    'potensi_desas.jumlah_bts',
+                    'potensi_desas.jumlah_operator',
+                    'potensi_desas.jumlah_kantor_pos',
+                    'potensi_desas.jumlah_kantor_kurlog',
                 )
                     ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
                     ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
@@ -321,6 +333,10 @@ class KodePosController extends Controller
                                 'jumlah_fasilitas_ibadah' => $item['jumlah_fasilitas_ibadah'],
                                 'jumlah_tempat_wisata' => $item['jumlah_tempat_wisata'],
                                 'jumlah_industri_kecil' => $item['jumlah_industri_kecil'],
+                                'jumlah_bts' => $item['jumlah_bts'],
+                                'jumlah_operator' => $item['jumlah_operator'],
+                                'jumlah_kantor_pos' => $item['jumlah_kantor_pos'],
+                                'jumlah_kurlog' => $item['jumlah_kurlog'],
                             ];
                             
                             });
@@ -359,7 +375,11 @@ class KodePosController extends Controller
                             'potensi_desas.jumlah_fasilitas_pendidikan',
                             'potensi_desas.jumlah_fasilitas_ibadah',
                             'potensi_desas.jumlah_tempat_wisata',
-                            'potensi_desas.jumlah_industri_kecil'
+                            'potensi_desas.jumlah_industri_kecil',
+                            'potensi_desas.jumlah_bts',
+                            'potensi_desas.jumlah_operator',
+                            'potensi_desas.jumlah_kantor_pos',
+                            'potensi_desas.jumlah_kantor_kurlog',
                         )
                             ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
                             ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
@@ -389,6 +409,11 @@ class KodePosController extends Controller
                                 'jumlah_fasilitas_ibadah' => $kodeposData->jumlah_fasilitas_ibadah,
                                 'jumlah_tempat_wisata' => $kodeposData->jumlah_tempat_wisata,
                                 'jumlah_industri_kecil' => $kodeposData->jumlah_industri_kecil,
+                       
+                                'jumlah_bts' => $kodeposData->jumlah_bts,
+                                'jumlah_operator' => $kodeposData->jumlah_operator,
+                                'jumlah_kantor_pos' => $kodeposData->jumlah_kantor_pos,
+                                'jumlah_kurlog' => $kodeposData->jumlah_kurlog,
                             ];
                     } elseif($digitCount === 10){
                         $kodeposData = KodePos::select(  DB::raw("ST_AsGeoJSON(desas.geom) AS geojson"),
@@ -401,7 +426,11 @@ class KodePosController extends Controller
                         'potensi_desas.jumlah_fasilitas_pendidikan',
                         'potensi_desas.jumlah_fasilitas_ibadah',
                         'potensi_desas.jumlah_tempat_wisata',
-                        'potensi_desas.jumlah_industri_kecil'
+                        'potensi_desas.jumlah_industri_kecil',
+                        'potensi_desas.jumlah_bts',
+                        'potensi_desas.jumlah_operator',
+                        'potensi_desas.jumlah_kantor_pos',
+                        'potensi_desas.jumlah_kantor_kurlog',
                     )
                         ->leftJoin('desas', 'kode_pos.kode_dagri', '=', 'desas.kode_dagri')
                         ->leftJoin('kecamatans', 'desas.kode_kec', '=', 'kecamatans.kode_kec')
@@ -430,6 +459,10 @@ class KodePosController extends Controller
                                 'jumlah_fasilitas_ibadah' => $kodeposData->jumlah_fasilitas_ibadah,
                                 'jumlah_tempat_wisata' => $kodeposData->jumlah_tempat_wisata,
                                 'jumlah_industri_kecil' => $kodeposData->jumlah_industri_kecil,
+                                'jumlah_bts' => $kodeposData->jumlah_bts,
+                                'jumlah_operator' => $kodeposData->jumlah_operator,
+                                'jumlah_kantor_pos' => $kodeposData->jumlah_kantor_pos,
+                                'jumlah_kurlog' => $kodeposData->jumlah_kurlog,
                             ];
                     } else {
                         return response()->json(['message' => 'Invalid Kodepos'], 400);

@@ -15,6 +15,10 @@ class PotensiDesa extends Model
         'jumlah_fasilitas_ibadah',
         'jumlah_tempat_wisata',
         'jumlah_industri_kecil',
+        'jumlah_bts',
+        'jumlah_operator',
+        'jumlah_kantor_pos',
+        'jumlah_kurlog',
     ];
 
     // Additional model logic or relationships can be defined here
