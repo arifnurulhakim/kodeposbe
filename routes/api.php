@@ -62,10 +62,9 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::controller(ProvController::class)->group(function () {
-    Route::get('/allprovinsi', 'getallprovinsi');
+    Route::get('/allprovinsis', 'getallprovinsi');
 });
 Route::controller(KodePosController::class)->group(function () {
-
     Route::get('/kode-pos/kodepos', 'getallkodepos');
     Route::get('/kode-pos/kodepos/{kodepos}', 'getbykodepos');
     Route::get('/kode-pos/wilayah', 'getbywilayah');

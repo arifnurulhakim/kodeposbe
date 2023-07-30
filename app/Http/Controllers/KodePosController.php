@@ -390,15 +390,6 @@ class KodePosController extends Controller
                                 'jumlah_tempat_wisata' => $kodeposData->jumlah_tempat_wisata,
                                 'jumlah_industri_kecil' => $kodeposData->jumlah_industri_kecil,
                             ];
-
-                        
-                          
-                            // dd($geojson);
-
-                           
-
-                          
-                        
                     } elseif($digitCount === 10){
                         $kodeposData = KodePos::select(  DB::raw("ST_AsGeoJSON(desas.geom) AS geojson"),
                         'kode_pos.*',
@@ -440,11 +431,6 @@ class KodePosController extends Controller
                                 'jumlah_tempat_wisata' => $kodeposData->jumlah_tempat_wisata,
                                 'jumlah_industri_kecil' => $kodeposData->jumlah_industri_kecil,
                             ];
-                            
-
-                         
-
-                         
                     } else {
                         return response()->json(['message' => 'Invalid Kodepos'], 400);
                     }
