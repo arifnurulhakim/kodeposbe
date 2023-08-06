@@ -15,7 +15,14 @@ class KecController extends Controller
             $kecamatan = Kecamatan::select('kecamatans.*', 'provinsis.nama_provinsi', 'kabupatens.nama_kabupaten')
                 ->leftJoin('kabupatens', 'kecamatans.kode_kab', '=', 'kabupatens.kode_kab')
                 ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')->get();
-            
+                $userLogin = Auth::user();
+                if ($userLogin->role == 1) {
+                    $userLog = new UserLog();
+                    $userLog->user_id = $userLogin->id;
+                    $userLog->aktivitas = 'melihat data kecamatan';
+                    $userLog->modul = 'KecController';
+                    $userLog->save();
+                }
             return response()->json([
                 'status' => 'success',
                 'data' => $kecamatan,

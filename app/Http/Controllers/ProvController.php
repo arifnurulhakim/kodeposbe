@@ -13,6 +13,14 @@ class ProvController extends Controller
     {
         try {
             $provisi = Provinsi::all();
+            $userLogin = Auth::user();
+            if ($userLogin->role == 1) {
+                $userLog = new UserLog();
+                $userLog->user_id = $userLogin->id;
+                $userLog->aktivitas = 'melihat data provinsi';
+                $userLog->modul = 'ProvController';
+                $userLog->save();
+            }
             return response()->json([
                 'status' => 'success',
                 'data' => $provisi,

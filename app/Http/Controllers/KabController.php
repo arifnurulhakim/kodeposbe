@@ -13,9 +13,18 @@ class KabController extends Controller
     public function index()
     {
         try {
+
             $kabupaten = Kabupaten::select('kabupatens.*', 'provinsis.nama_provinsi')
                 ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')->get();
-            
+
+               $userLogin = Auth::user();
+            if ($userLogin->role == 1) {
+                $userLog = new UserLog();
+                $userLog->user_id = $userLogin->id;
+                $userLog->aktivitas = 'melihat data kabupaten';
+                $userLog->modul = 'KabController';
+                $userLog->save();
+            }
             return response()->json([
                 'status' => 'success',
                 'data' => $kabupaten,

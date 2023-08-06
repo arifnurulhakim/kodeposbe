@@ -26,6 +26,14 @@ class KodePosController extends Controller
                 ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov');
                 $data = $kodepos->get();
                 $totalData = KodePos::count();
+                $userLogin = Auth::user();
+                if ($userLogin->role == 1) {
+                    $userLog = new UserLog();
+                    $userLog->user_id = $userLogin->id;
+                    $userLog->aktivitas = 'melihat data kodepos';
+                    $userLog->modul = 'KodePosController';
+                    $userLog->save();
+                }
         
                 return response()->json([
                     'status' => 'success',

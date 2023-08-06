@@ -80,7 +80,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/getUser/{id}', 'getUser');
         Route::get('/getAlluser', 'getAlluser');
         Route::delete('/deleteUser/{id}', 'deleteUser');
-        Route::post('/updateUser/{id}', 'updateUser');
+        Route::put('/updateUser/{id}', 'updateUser');
         Route::post('/logout', 'logout');
         Route::get('/exportCSV', 'exportCSV');
     });

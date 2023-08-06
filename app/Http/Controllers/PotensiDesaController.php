@@ -15,6 +15,14 @@ class PotensiDesaController extends Controller
             $potensidesa = PotensiDesa::join('desas', 'potensi_desas.kode_dagri', '=', 'desas.kode_dagri')
             ->select('desas.nama_desa','potensi_desas.*')
             ->get();
+            $userLogin = Auth::user();
+            if ($userLogin->role == 1) {
+                $userLog = new UserLog();
+                $userLog->user_id = $userLogin->id;
+                $userLog->aktivitas = 'melihat data Potensi Desa';
+                $userLog->modul = 'PotensiDesaController';
+                $userLog->save();
+            }
             return response()->json([
                 'status' => 'success',
                 'data' => $potensidesa,

@@ -36,6 +36,7 @@ class AuthController extends Controller
                 ], 404);
             }
             $user = Auth::user();
+            // dd($user);
         
             // Create user log
             if($user){
@@ -51,6 +52,8 @@ class AuthController extends Controller
                     'id' => $user->id,
                     'user' => $user->name,
                     'email' => $user->email,
+                    'role' => $user->role,
+                    'instansi' => $user->instansi,
                     'token' => $token,
                 ],
             ], 200);
@@ -65,8 +68,10 @@ class AuthController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
+                'instansi' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:6',
+                'role' => 'required'
             ]);
 
             if ($validator->fails()) {
@@ -79,7 +84,9 @@ class AuthController extends Controller
 
             $user = User::create([
                 'name' => $request->get('name'),
+                'instansi' => $request->get('instansi'),
                 'email' => $request->get('email'),
+                'role' => $request->get('role'),
                 'password' => bcrypt($request->get('password')),
             ]);
             $userlogin = Auth::user();
@@ -158,6 +165,8 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'role' => $user->role,
+                'instansi' => $user->instansi,
             ];
     
             return response()->json([
@@ -186,6 +195,8 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'role' => $user->role,
+                'instansi' => $user->instansi,
             ];
     
             return response()->json([
@@ -208,6 +219,8 @@ class AuthController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
+                    'role' => $user->role,
+                    'instansi' => $user->instansi,
                 ];
                 array_push($userArray, $userData);
             }
@@ -233,13 +246,18 @@ class AuthController extends Controller
                     'error_code' => 'USER_NOT_FOUND'
                 ], 404);
             }
-            
+            if ($request->has('email') && $request->email === $user->email) {
+                $request->request->remove('email');
+            }
             $validator = Validator::make($request->all(), [
                 'name' => 'string|max:255',
-                'email' => 'string|email|max:255|unique:users,email,'.$id,
+                'instansi' => 'string|max:255',
+                'email' => 'string|email|max:255|unique:users',
                 'password' => 'string|min:6',
+                'role' => 'integer'
             ]);
 
+            
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
@@ -249,6 +267,8 @@ class AuthController extends Controller
             }
 
             $user->name = $request->name ?? $user->name;
+            $user->role = $request->role ?? $user->role;
+            $user->instansi = $request->instansi ?? $user->role;
             $user->email = $request->email ?? $user->email;
             $user->password = $request->password ? bcrypt($request->password) : $user->password;
             $user->save();

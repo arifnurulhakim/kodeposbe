@@ -11,6 +11,7 @@ class UserLogController extends Controller
     {
         $userLogs = UserLog::join('users', 'users.id', '=', 'user_logs.user_id')
         ->select('user_logs.*', 'users.*')
+        ->orderby('user_logs.created_at','desc')
         ->get();
 
         return response()->json([
