@@ -10,24 +10,51 @@ use Illuminate\Support\Facades\Auth;  // Tambahkan ini untuk mengakses data user
 
 class KabController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
+            $perPage = $request->query('per_page', 10);
+            $currentPage = $request->query('page', 1);
+            $search = $request->query('search');
 
             $kabupaten = Kabupaten::select('kabupatens.*', 'provinsis.nama_provinsi')
-                ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov')->get();
+                ->leftJoin('provinsis', 'kabupatens.kode_prov', '=', 'provinsis.kode_prov');
 
-               $userLogin = Auth::user();
+            $totalData = $kabupaten->count();
+
+            $data = $kabupaten->when($search, function ($query) use ($search) {
+                return $query->where(function ($innerQuery) use ($search) {
+                    $innerQuery->where('kabupatens.nama_kabupaten', 'like', '%' . $search . '%')
+                        ->orWhere('provinsis.nama_provinsi', 'like', '%' . $search . '%');
+                });
+            })
+            ->paginate($perPage, ['*'], 'page', $currentPage);
+
+            $totalPages = ceil($totalData / $perPage);
+
+            $userLogin = Auth::user();
             if ($userLogin->role == 1) {
-                $userLog = new UserLog();
-                $userLog->user_id = $userLogin->id;
-                $userLog->aktivitas = 'melihat data kabupaten';
-                $userLog->modul = 'KabController';
-                $userLog->save();
+                $this->logActivity('melihat data kabupaten');
             }
+
             return response()->json([
                 'status' => 'success',
-                'data' => $kabupaten,
+                'total_data' => $totalData,
+                'total_pages' => $totalPages,
+                'data' => [
+                    'current_page' => $data->currentPage(),
+                    'data' => $data->items(),
+                    'first_page_url' => $data->url(1),
+                    'from' => $data->firstItem(),
+                    'last_page' => $data->lastPage(),
+                    'last_page_url' => $data->url($data->lastPage()),
+                    'next_page_url' => $data->nextPageUrl(),
+                    'path' => $data->url($data->currentPage()),
+                    'per_page' => $data->perPage(),
+                    'prev_page_url' => $data->previousPageUrl(),
+                    'to' => $data->lastItem(),
+                    'total' => $totalData,
+                ],
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);

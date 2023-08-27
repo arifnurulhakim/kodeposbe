@@ -9,21 +9,47 @@ use Illuminate\Support\Facades\Auth; // Tambahkan ini untuk mengakses data user 
 
 class ProvController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $provisi = Provinsi::all();
+            $perPage = $request->query('per_page', 10);
+            $currentPage = $request->query('page', 1);
+            $search = $request->query('search');
+
+            $provisi = Provinsi::select('*');
+
+            $totalData = $provisi->count();
+
+            $data = $provisi->when($search, function ($query) use ($search) {
+                return $query->where('nama_provinsi', 'like', '%' . $search . '%');
+            })
+            ->paginate($perPage, ['*'], 'page', $currentPage);
+
+            $totalPages = ceil($totalData / $perPage);
+
             $userLogin = Auth::user();
             if ($userLogin->role == 1) {
-                $userLog = new UserLog();
-                $userLog->user_id = $userLogin->id;
-                $userLog->aktivitas = 'melihat data provinsi';
-                $userLog->modul = 'ProvController';
-                $userLog->save();
+                $this->logActivity('melihat data provinsi');
             }
+
             return response()->json([
                 'status' => 'success',
-                'data' => $provisi,
+                'total_data' => $totalData,
+                'total_pages' => $totalPages,
+                'data' => [
+                    'current_page' => $data->currentPage(),
+                    'data' => $data->items(),
+                    'first_page_url' => $data->url(1),
+                    'from' => $data->firstItem(),
+                    'last_page' => $data->lastPage(),
+                    'last_page_url' => $data->url($data->lastPage()),
+                    'next_page_url' => $data->nextPageUrl(),
+                    'path' => $data->url($data->currentPage()),
+                    'per_page' => $data->perPage(),
+                    'prev_page_url' => $data->previousPageUrl(),
+                    'to' => $data->lastItem(),
+                    'total' => $totalData,
+                ],
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
