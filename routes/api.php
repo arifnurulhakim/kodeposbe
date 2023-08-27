@@ -86,7 +86,7 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::controller(KodePosController::class)->group(function () {
-        Route::get('/kode-pos', 'index');
+        Route::get('/kode-pos/{perPage?}/{currentPage?}','index');
         Route::post('/kode-pos', 'store');
         Route::get('/kode-pos/{id}', 'show');
         Route::put('/kode-pos/{id}', 'update');
