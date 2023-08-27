@@ -14,6 +14,6 @@ class Authenticate extends Middleware
     protected function redirectTo(Request $request): ?string
     {
         // Redirect to the desired URL
-        return 'http://localhost:5173/';
+        return response()->json(['error' => 'Unauthorized'], 401);
     }
 }

@@ -12,8 +12,6 @@ class ResetCodePassword extends Model
     protected $fillable = [
         'email',
         'code',
-        'created_at',
-        'updated_at',
     ];
 
     public function showIsExpire()

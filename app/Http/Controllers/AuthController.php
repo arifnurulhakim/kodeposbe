@@ -7,6 +7,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\ApiKey;
 use App\Models\UserLog;
 
 class AuthController extends Controller
@@ -36,6 +37,7 @@ class AuthController extends Controller
                 ], 404);
             }
             $user = Auth::user();
+            $apikey = ApiKey::where('user_id',$user->id)->first();
             // dd($user);
         
             // Create user log
@@ -55,6 +57,7 @@ class AuthController extends Controller
                     'role' => $user->role,
                     'instansi' => $user->instansi,
                     'token' => $token,
+                    'api_key' => $apikey->key,
                 ],
             ], 200);
         } catch (\Exception $e) {
@@ -67,11 +70,10 @@ class AuthController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
-                'instansi' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
+                'name' => 'required|string',
+                'instansi' => 'required|string',
+                'email' => 'required|string|email|unique:users',
                 'password' => 'required|string|min:6',
-                'role' => 'required'
             ]);
 
             if ($validator->fails()) {
@@ -86,9 +88,15 @@ class AuthController extends Controller
                 'name' => $request->get('name'),
                 'instansi' => $request->get('instansi'),
                 'email' => $request->get('email'),
-                'role' => $request->get('role'),
                 'password' => bcrypt($request->get('password')),
             ]);
+            $apiKey = JWTAuth::fromUser($user); // Generate JWT token as API key
+            $apiKeyRecord = new ApiKey([
+                'key' => $apiKey,
+                'user_id' => $user->id,
+            ]);
+            $apiKeyRecord->save();
+
             $userlogin = Auth::user();
             if($userlogin){
                 $userLog = new UserLog();
@@ -105,12 +113,41 @@ class AuthController extends Controller
                 }
             $token = JWTAuth::fromUser($user);
 
-            return response()->json(compact('user','token'),201);
+          return response()->json([
+            'status' => 'success',
+            'data'=>[
+                'user' => $user,
+                'api_key' => $apiKey,
+            ]
+          ], 201);
 
         } catch (\Exception $e) {
             return response()->json(['error' => $e], 500);
         }
     }
+    public function generateApiKey()
+{
+    $user = Auth::user();
+    $apiKey = JWTAuth::fromUser($user); 
+    $apiKeyRecord = ApiKey::where('user_id', $user->id)->first();
+
+    if ($apiKeyRecord) {
+        // Jika API key untuk pengguna sudah ada, update API key yang ada
+        $apiKeyRecord->update(['key' => $apiKey]);
+    } else {
+        // Jika belum ada, tambahkan API key baru
+        $apiKeyRecord = new ApiKey([
+            'key' => $apiKey,
+            'user_id' => $user->id,
+        ]);
+        $apiKeyRecord->save();
+    }
+
+    return response()->json([
+        'user' => $user,
+        'api_key' => $apiKey,
+          ], 200);
+}
 
     public function logout()
     {
