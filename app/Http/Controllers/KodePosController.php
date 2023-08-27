@@ -84,9 +84,6 @@ class KodePosController extends Controller
         }
     }
     
-    
-    
-
     public function dashboard()
     {
         try {
